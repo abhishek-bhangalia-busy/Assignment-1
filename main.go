@@ -76,8 +76,8 @@ func printJSON(d interface{}, idn string) { //idn string is used for indentation
 	}
 }
 
-func setJSONKey(key string, val interface{}, src map[string]interface{}) (n int) {
-	if _, ok := src[key]; ok {
+func setJSONKey(key string, val interface{}, src map[string]interface{}) (n int) {// n is used to count the total no of keys which are set by this func
+	if _, ok := src[key]; ok { // if src has key then setting it directly
 		src[key] = val
 		n++
 	}
@@ -85,10 +85,10 @@ func setJSONKey(key string, val interface{}, src map[string]interface{}) (n int)
 		rVal := reflect.ValueOf(v)
 		switch rVal.Kind() {
 		case reflect.Map:
-			n = n + setJSONKey(key, val, v.(map[string]interface{}))
+			n = n + setJSONKey(key, val, v.(map[string]interface{})) // recursive call for nested map
 		case reflect.Slice:
 			for _, m := range v.([]interface{}) {
-				if reflect.ValueOf(m).Kind() == reflect.Map {
+				if reflect.ValueOf(m).Kind() == reflect.Map { // Slice can have map as element also
 					n = n + setJSONKey(key, val, m.(map[string]interface{}))
 				}
 			}
